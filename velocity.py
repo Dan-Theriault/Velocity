@@ -5,19 +5,22 @@ import subprocess
 from shutil import copyfile
 
 
-def velocity(filename, configfile='default'):
+def velocity(filename, config='default'):
     """Velocity implements the logic for opening pages.
 
-    The optional configfile must specify a notebook path and an extension.
+    filename -- string representation of file, no extension
+    config -- configuration sourced from velocity.config
+
+    The config MUST specify a notebook path and an extension.
     The program will attempt to provide sane defaults for editor, editor_args,
     and, if applicable, template.
     """
-    path_config = get_path_config(configfile)
+    path_config = get_path_config(config)
     book = path_config['book']
     ext = path_config['extension']
     page = book/(filename+ext)
 
-    editor_config = get_editor_config(configfile, page)
+    editor_config = get_editor_config(config, page)
     editor = editor_config['editor']
     editor_args = editor_config['editor_args']
     if 'template' in editor_config:
@@ -36,8 +39,8 @@ def velocity(filename, configfile='default'):
         subprocess.Popen(editor, *editor_args])
 
 
-def get_path_config(configfile):
-    """get_path_config reads the notebook and extension from the configfile."""
+def get_path_config(config):
+    """get_path_config reads the notebook and extension from the config."""
     # TODO Properly sourcing a configuration
     config = {
             'book': Path('/home/dtheriault3/Notes'),
@@ -46,8 +49,8 @@ def get_path_config(configfile):
     return config
 
 
-def get_editor_config(configfile, page):
-    """get_editor_config reads editor options from the configfile."""
+def get_editor_config(config, page):
+    """get_editor_config reads editor options from the config."""
     config = {
             'editor': 'gnome-terminal',
             'editor_args': ['-e', 'vim ' + page.as_posix()],
