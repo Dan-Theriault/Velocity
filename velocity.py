@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """velocity.py implements the main logic of the program."""
 
 from pathlib import Path

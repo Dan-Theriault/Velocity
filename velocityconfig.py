@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Implementation of a class for sourcing configuration from a given file."""
 
 import configparser
