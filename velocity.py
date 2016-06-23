@@ -2,13 +2,12 @@
 
 """velocity.py implements the main logic of the program."""
 
+import os
 import subprocess
-from os.path import expanduser
-from pathlib import Path
 from shutil import copy
-from velocityconfig import VelocityConfig
+from velocityconf import bookconf
 
-configdir = expanduser('~') + '/.velocity'
+configdir = os.path.expanduser('~') + '/.velocity'
 
 
 def velocity(filename, book='Notes'):
@@ -22,48 +21,35 @@ def velocity(filename, book='Notes'):
     and, if applicable, template, but makes no guarantees.
     """
     # Configuration Variables
-    source = VelocityConfig(configdir+'/velocity.conf')
+    source = bookconf(configdir+'/velocity.conf')
     config = source.read(book)
 
-    bookpath = Path(config['bookpath'])
-    page = bookpath/(filename+config['extension'])
+    bookpath = config['bookpath']
+    if not os.path.exists(bookpath):
+        os.makedirs(bookpath)
+    page = bookpath + '/' + filename + config['extension']
 
     editor = config['editor']
     editor_args = config['args']
     if len(editor_args) > 0:
-        editor_args[-1] = editor_args[-1] + ' ' + (page.as_posix())
+        editor_args[-1] = editor_args[-1] + ' ' + page
     else:
-        editor_args = [page.as_posix()]
+        editor_args = [page]
 
     if 'template' in config:
-        template = Path(configdir + '/Templates/' + config['template'])
-        if not template.exists() and template.is_file():
+        template = configdir + '/Templates/' + config['template']
+        if not os.path.exists(template) or not os.path.isfile(template):
             template = None
     else:
         template = None
 
     # The Velocity logic!
-    if page.exists():
+    if os.path.exists(page):
         subprocess.Popen([editor, *editor_args])
     else:
         if template is not None:
-            copy(template.as_posix(), page.as_posix())
+            copy(template, page)
         else:
-            newfile = open(page.as_posix(), 'a')
+            newfile = open(page, 'a')
             newfile.close()
         subprocess.Popen([editor, *editor_args])
-
-
-def get_config():
-    """dummy method to provide an example configuration.
-
-    This method has been replaced with velocityconfig's read method.
-    It is retained only as a debugging fallback.
-    """
-    config = {
-        'bookpath': '/home/dtheriault3/Notes',
-        'extension': '.md',
-        'editor': 'gnome-terminal',
-        'editor_args': ['-e', 'vim '],
-        }
-    return config
