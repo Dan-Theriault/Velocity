@@ -2,12 +2,13 @@
 
 """velocity.py implements the main logic of the program."""
 
-import os
 import subprocess
+import os.path as path
+from os import makedirs
 from shutil import copy
 from velocityconf import bookconf
 
-configdir = os.path.expanduser('~') + '/.velocity'
+configdir = path.expanduser('~') + '/.velocity'
 
 
 def velocity(filename, book='Notes'):
@@ -25,8 +26,8 @@ def velocity(filename, book='Notes'):
     config = source.read(book)
 
     bookpath = config['bookpath']
-    if not os.path.exists(bookpath):
-        os.makedirs(bookpath)
+    if not path.exists(bookpath):
+        makedirs(bookpath)
     page = bookpath + '/' + filename + config['extension']
 
     editor = config['editor']
@@ -38,13 +39,13 @@ def velocity(filename, book='Notes'):
 
     if 'template' in config:
         template = configdir + '/Templates/' + config['template']
-        if not os.path.exists(template) or not os.path.isfile(template):
+        if not path.exists(template) or not path.isfile(template):
             template = None
     else:
         template = None
 
     # The Velocity logic!
-    if os.path.exists(page):
+    if path.exists(page):
         subprocess.Popen([editor, *editor_args])
     else:
         if template is not None:
