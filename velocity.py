@@ -2,6 +2,7 @@
 
 """velocity.py implements the main logic of the program."""
 
+import argparse
 import subprocess
 import os.path as path
 from os import makedirs
@@ -9,9 +10,10 @@ from shutil import copy
 from velocityconf import bookconf
 
 configdir = path.expanduser('~') + '/.velocity'
+source = bookconf(configdir+'/velocity.conf')
 
 
-def velocity(filename, book='Notes'):
+def velocity(filename, book=None):
     """Velocity implements the logic for opening pages.
 
     filename -- string representation of file, no extension
@@ -22,7 +24,6 @@ def velocity(filename, book='Notes'):
     and, if applicable, template, but makes no guarantees.
     """
     # Configuration Variables
-    source = bookconf(configdir+'/velocity.conf')
     config = source.read(book)
 
     bookpath = config['bookpath']
@@ -54,3 +55,14 @@ def velocity(filename, book='Notes'):
             newfile = open(page, 'a')
             newfile.close()
         subprocess.Popen([editor, *editor_args])
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Open a page in the notational-velocity style.')
+    parser.add_argument('book', nargs='?', choices=source.getbooks(),
+                        help='Velocity notebook (defined in velocity.conf)')
+    parser.add_argument('page', nargs='+',
+                        help='The page (or pages) to open with velocity')
+    args = parser.parse_args()
+    for p in args.page:
+        velocity(p, args.book)

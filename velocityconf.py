@@ -12,11 +12,20 @@ class bookconf:
         """Instantiation."""
         self.file = configfile
         self.parser = configparser.ConfigParser()
+        self.parser.read(self.file)
         self.config = {}
+
+    def getbooks(self):
+        """return a list of books based off the configfile."""
+        sections = self.parser.sections()
+        sections.remove('Defaults')
+        return sections
 
     def read(self, bookname):
         """Read configuration information and return as a dictionary."""
-        self.parser.read(self.file)
+        if bookname is None:
+            bookname = self.parser['Defaults']['book']
+
         self.config = {
             'bookpath': self.parser[bookname]['bookpath'],
             'extension': self.parser[bookname]['extension'],
@@ -27,7 +36,7 @@ class bookconf:
         if 'editor' in self.parser[bookname]:
             self.config['editor'] = self.parser[bookname]['editor']
         else:
-            self.config['editor'] = self.parser['GLOBAL']['editor']
+            self.config['editor'] = self.parser['Defaults']['editor']
 
         i = 1
         while 'arg' + str(i) in self.parser[bookname]:
