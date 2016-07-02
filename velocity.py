@@ -11,7 +11,7 @@ import subprocess
 import os.path as path
 from os import makedirs
 from shutil import copy
-from velocityconf import VelocityConf
+from velocityconfig import VelocityConf
 
 # Implement more flexible configuration file location (system, cross-platform)
 configdir = path.expanduser('~') + '/.velocity'
@@ -56,8 +56,9 @@ def velocity(filename, book=source.defaultbook()):
             newfile.close()
         subprocess.Popen([editor, *editor_args])
 
-if __name__ == '__main__':
-    # If run as __main__, a CLI is made available
+
+def main():
+    """If run as __main__, a CLI is made available."""
     parser = argparse.ArgumentParser(
         description='Notational Velocity for everything')
 
@@ -73,3 +74,6 @@ if __name__ == '__main__':
         velocity(args.page, args.book)
     else:
         velocity(args.page)
+
+if __name__ == '__main__':
+    main()
