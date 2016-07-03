@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-"""velocity.py is notational velocity for everything.
+"""dxdt.py is notational velocity for every file.
 
-The script currently should support any filetype or editor,
+The script should currently support any filetype or editor,
 as well as templates and a basic CLI.
 """
 
@@ -11,15 +11,15 @@ import subprocess
 import os.path as path
 from os import makedirs
 from shutil import copy
-from velocityconfig import VelocityConf
+from dxdtconf import dxdtConf
 
 # Implement more flexible configuration file location (system, cross-platform)
-configdir = path.expanduser('~') + '/.velocity'
-source = VelocityConf(configdir+'/velocity.conf')
+configdir = path.expanduser('~') + '/.dxdt'
+source = dxdtConf(configdir+'/dxdt.conf')
 
 
-def velocity(filename, book=source.defaultbook()):
-    """Velocity implements the logic for opening pages.
+def dxdt(filename, book=source.defaultbook()):
+    """dxdt implements the logic for opening pages.
 
     Filename should NOT include an extension.
     """
@@ -58,22 +58,24 @@ def velocity(filename, book=source.defaultbook()):
 
 
 def main():
-    """If run as __main__, a CLI is made available."""
+    """CLI for opening files."""
+    # Main parser
     parser = argparse.ArgumentParser(
-        description='Notational Velocity for everything')
+        description='Notational Velocity for every file')
 
-    parser.add_argument('--book', '-b',
-                        metavar='NOTEBOOK',
+    parser.add_argument('book',
                         choices=source.getbooks(),
-                        help='Velocity notebook (defined in velocity.conf)')
+                        nargs='?',
+                        help='Name of dxdt notebook.')
     parser.add_argument('page',
-                        help='The page (or pages) to open with velocity')
+                        help='Page to open with dxdt.')
+
     args = parser.parse_args()
 
     if args.book is not None:
-        velocity(args.page, args.book)
+        dxdt(args.page, args.book)
     else:
-        velocity(args.page)
+        dxdt(args.page)
 
 if __name__ == '__main__':
     main()

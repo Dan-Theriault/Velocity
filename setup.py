@@ -1,4 +1,6 @@
-"""Setup.py for velocity package."""
+#!/usr/bin/env python3
+
+"""Setup.py for dxdt package."""
 
 import os
 from setuptools import setup   # , find_packages
@@ -9,10 +11,15 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name='velocity',
-    version='0.32',
+    name='dxdt',
+    version='0.34',
     # packages=find_packages(exclude='tests'),
-    py_modules=['velocity', 'velocityconfig'],
+    py_modules=[
+        'dxdt',
+        'dxdtconf',
+        'dxdtbind',
+        'dxdtset'
+    ],
 
     description=('Notational Velocity for any file and editor.'),
     long_description=read('README.md'),
@@ -32,7 +39,9 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'velocity = velocity:main'
+            'dxdt = dxdt:main',
+            'dxdt-bind = dxdtbind:main',
+            'dxdt-set = dxdtset:main'
         ]
     }
 )
