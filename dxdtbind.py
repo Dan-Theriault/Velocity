@@ -13,7 +13,7 @@ def main():
     newp.add_argument('name',
                       help='Name of dxdt book.')
     newp.add_argument('path',
-                      help='Absolute path to dxdt book.')
+                      help='Path to dxdt book.')
     newp.add_argument('extension',
                       help='Extension for pages of dxdt book.')
 

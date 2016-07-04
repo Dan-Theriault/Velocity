@@ -7,6 +7,7 @@ Feature-incomplete and under active development.
 """
 
 import configparser
+import os.path
 
 
 class dxdtConf:
@@ -35,7 +36,7 @@ class dxdtConf:
     def read(self, book):
         """Read configuration information and return as a dict."""
         self.config = {
-            'path': self.parser[book]['path'],
+            'path': os.path.expanduser(self.parser[book]['path']),
             'extension': self.parser[book]['extension'],
             'args': []
         }

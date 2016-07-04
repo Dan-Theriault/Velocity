@@ -8,13 +8,12 @@ as well as templates and a basic CLI.
 
 import argparse
 import subprocess
-import os.path as path
-from os import makedirs
+from os import makedirs, path
 from shutil import copy
 from dxdtconf import dxdtConf
 
 # Implement more flexible configuration file location (system, cross-platform)
-configdir = path.expanduser('~') + '/.dxdt'
+configdir = path.expanduser('~/.dxdt')
 source = dxdtConf(configdir+'/dxdt.conf')
 
 
