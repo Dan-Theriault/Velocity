@@ -16,9 +16,8 @@ setup(
     # packages=find_packages(exclude='tests'),
     py_modules=[
         'dxdt',
+        'dxdtcli',
         'dxdtconf',
-        'dxdtbind',
-        'dxdtset'
     ],
 
     description=('Notational Velocity for any file and editor.'),
@@ -39,9 +38,9 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'dxdt = dxdt:main',
-            'dxdt-bind = dxdtbind:main',
-            'dxdt-set = dxdtset:main'
+            'dxdt = dxdtcli:opener',
+            'dxdt-bind = dxdtcli:binder',
+            'dxdt-set = dxdtcli:setter'
         ]
     }
 )

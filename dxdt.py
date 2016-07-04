@@ -54,27 +54,3 @@ def dxdt(filename, book=source.defaultbook()):
             newfile = open(page, 'a')
             newfile.close()
         subprocess.Popen([editor, *editor_args])
-
-
-def main():
-    """CLI for opening files."""
-    # Main parser
-    parser = argparse.ArgumentParser(
-        description='Notational Velocity for every file')
-
-    parser.add_argument('book',
-                        choices=source.getbooks(),
-                        nargs='?',
-                        help='Name of dxdt notebook.')
-    parser.add_argument('page',
-                        help='Page to open with dxdt.')
-
-    args = parser.parse_args()
-
-    if args.book is not None:
-        dxdt(args.page, args.book)
-    else:
-        dxdt(args.page)
-
-if __name__ == '__main__':
-    main()
