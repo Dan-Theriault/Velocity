@@ -25,12 +25,12 @@ class dxdtConf:
 
     def defaultbook(self):
         """Used primarily when 'book' argument to dxdt() is None."""
-        return self.parser['Defaults']['book']
+        return self.parser['default']['book']
 
     def getbooks(self):
         """return a list of books based off the configfile."""
         sections = self.parser.sections()
-        sections.remove('Defaults')
+        sections.remove('default')
         return sections
 
     def read(self, book):
@@ -45,7 +45,7 @@ class dxdtConf:
         if 'editor' in self.parser[book]:
             self.config['editor'] = self.parser[book]['editor']
         else:
-            self.config['editor'] = self.parser['Defaults']['editor']
+            self.config['editor'] = self.parser['default']['editor']
 
         i = 1
         while 'arg' + str(i) in self.parser[book]:
@@ -59,15 +59,15 @@ class dxdtConf:
 
     def write(self, book, key, value):
         """Basic implementation of writing new values to config."""
-        if key is 'args':
+        if key == 'args':
             i = 1
             for arg in value:
                 self.parser[book]['arg' + str(i)] = arg
                 i = i + 1
-        elif len(value) is 1:
+        elif len(value) == 1:
             self.parser[book][key] = value[0]
         else:
-            pass
+            raise ValueError('too many args: ' + str(len(value)))
         self.parser.write(open(self.file, 'w'))
 
     def newbook(self, name, path, extension):
@@ -79,4 +79,4 @@ class dxdtConf:
             self.parser[name]['extension'] = extension
             self.parser.write(open(self.file, 'w'))
         else:
-            pass  # Need to re-learn errors in python....
+            raise ValueError('book already exists: ' + name)
