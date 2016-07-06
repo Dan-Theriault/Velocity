@@ -6,7 +6,6 @@ The script should currently support any filetype or editor,
 as well as templates and a basic CLI.
 """
 
-import argparse
 import subprocess
 from os import makedirs, path
 from shutil import copy
