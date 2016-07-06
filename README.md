@@ -19,7 +19,7 @@ Notebooks are the basic organizational model of dx/dt. Configuration is defined 
 
 Example Configuration:
 
-```config
+```shell
 # default behavior, editor and book are the only implemented fields.
 [default]
 editor = xdg-open
