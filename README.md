@@ -19,7 +19,7 @@ Notebooks are the basic organizational model of dx/dt. Configuration is defined 
 
 Example Configuration:
 
-'''
+```config
 # default behavior, editor and book are the only implemented fields.
 [default]
 editor = xdg-open
@@ -48,17 +48,17 @@ template = blank.xoj
 path = ~/org
 extension = .org
 editor = emacs
-'''
+```
 
 
 # Usage
 Usage examples assume use of example configuration.
 
 ### dxdt
-'''shell
+```shell
 dxdt todo # Open a file at '~/Notes/todo.md' in vim (default notebook usage)
 dxdt org jul06 # Open a file at '~/org/jul06.org' in emacs 
-'''
+```
 
 ### dxdt-set and dxdt-bind
 
