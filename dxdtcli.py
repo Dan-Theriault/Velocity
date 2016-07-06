@@ -5,7 +5,7 @@ from dxdt import dxdt
 from dxdtconf import dxdtConf
 
 configdir = path.expanduser('~/.dxdt')
-source = dxdtConf(configdir+'/dxdt.conf')
+source = dxdtConf(configdir+'/config')
 
 
 def opener():

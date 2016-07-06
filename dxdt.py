@@ -13,7 +13,7 @@ from dxdtconf import dxdtConf
 
 # Implement more flexible configuration file location (system, cross-platform)
 configdir = path.expanduser('~/.dxdt')
-source = dxdtConf(configdir+'/dxdt.conf')
+source = dxdtConf(configdir+'/config')
 
 
 def dxdt(filename, book=source.defaultbook()):
