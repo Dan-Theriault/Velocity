@@ -3,7 +3,7 @@
 """Setup.py for dxdt package."""
 
 import os
-from setuptools import setup   # , find_packages
+from setuptools import setup, find_packages
 
 
 def read(fname):
@@ -13,21 +13,25 @@ def read(fname):
 setup(
     name='dxdt',
     version='0.34',
-    # packages=find_packages(exclude='tests'),
-    py_modules=[
-        'dxdt',
-        'dxdtcli',
-        'dxdtconf',
-    ],
+    packages=find_packages(exclude=['tests']),
 
-    description=('Notational Velocity for any file and editor.'),
+    # py_modules=[
+    #     'dxdt',
+    #     'dxdtcli',
+    #     'dxdtconf',
+    # ],
+
+    description=('Notational Velocity for every file.'),
     long_description=read('README.md'),
 
     author='Daniel Theriault',
     author_email='dannymt97@gmail.com',
     license='MIT',
 
-    # install_requires=[],
+    install_requires=[
+        'click',
+        'click_default_group'
+    ],
 
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -38,9 +42,9 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'dxdt = dxdtcli:opener',
-            'dxdt-bind = dxdtcli:binder',
-            'dxdt-set = dxdtcli:setter'
+            'dxdt = dxdt.cli:opener',
+            'dxdt-set = dxdt.cli:setter',
+            'dxdt-bind = dxdt.cli:binder'
         ]
     }
 )
