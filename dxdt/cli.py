@@ -1,6 +1,6 @@
 """CLIs to dxdt."""
 import argparse
-from os import path
+# from os import path
 from dxdt import dxdt, config
 
 source = config.source()
@@ -59,3 +59,20 @@ def binder():
 
     args = newp.parse_args()
     source.new_book(args.name, args.path, args.extension)
+
+
+def getter():
+    """CLI for getting lists of books and pages."""
+    getp = argparse.ArgumentParser(description='Get books / pages.')
+    getp.add_argument('--book',
+                      help='Book to get pagelist for. If not specified, ' +
+                      'returns list of books')
+    args = getp.parse_args()
+    if args.book is not None:
+        pages = source.get_pages(args.book)
+        for page in pages:
+            print(page)
+    else:
+        books = source.get_books()
+        for book in books:
+            print(book)
