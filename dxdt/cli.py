@@ -17,9 +17,11 @@ def opener():
                         nargs='?',
                         help='Name of dxdt notebook.')
     parser.add_argument('page',
+                        nargs='+',
                         help='Page to open with dxdt.')
 
     args = parser.parse_args()
+    args.page = ' '.join(args.page)
 
     if args.book is not None:
         dxdt.dxdt(args.page, args.book)

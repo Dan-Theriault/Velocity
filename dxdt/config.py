@@ -26,9 +26,9 @@ class BookHandler:
         configfile is most likely in $HOME/.dxdt/
         """
         self.file = config_file
+        self.dir = os.path.dirname(config_file)
         self.parser = configparser.ConfigParser()
         self.parser.read(self.file)
-        self.config = {}
 
     def default_book(self):
         """Used primarily when 'book' argument to dxdt() is None."""
@@ -64,7 +64,7 @@ class BookHandler:
 
     def read(self, book):
         """Read configuration information and return as a dict."""
-        self.config = {
+        config = {
             'path': os.path.expanduser(self.parser[book]['path']),
             'extension': self.parser[book]['extension'],
             'args': []
@@ -72,19 +72,19 @@ class BookHandler:
 
         # Get editor for book if available: else, use global default
         if 'editor' in self.parser[book]:
-            self.config['editor'] = self.parser[book]['editor']
+            config['editor'] = self.parser[book]['editor']
         else:
-            self.config['editor'] = self.parser['default']['editor']
+            config['editor'] = self.parser['default']['editor']
 
         i = 1
         while 'arg' + str(i) in self.parser[book]:
-            self.config['args'].append(self.parser[book]['arg'+str(i)])
+            config['args'].append(self.parser[book]['arg'+str(i)])
             i = i + 1
 
         if 'template' in self.parser[book]:
-            self.config['template'] = self.parser[book]['template']
+            config['template'] = self.parser[book]['template']
 
-        return self.config
+        return config
 
     def write(self, book, key, value):
         """Basic implementation of writing new values to config."""

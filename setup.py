@@ -12,7 +12,7 @@ def read(fname):
 
 setup(
     name='dxdt',
-    version='0.41',
+    version='0.42',
     packages=find_packages(exclude=['tests']),
 
     # py_modules=[
