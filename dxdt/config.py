@@ -13,8 +13,8 @@ import os
 def source():
     """return configuration file path."""
     configdir = os.path.expanduser('~/.dxdt')
-    source = BookHandler(configdir+'/config')
-    return source
+    config_source = BookHandler(configdir+'/config')
+    return config_source
 
 
 class BookHandler:
@@ -46,8 +46,9 @@ class BookHandler:
         ext = self.parser[book]['extension']
 
         def is_page(f):
+            """Determine if a path points to a page in given notebook."""
             f = os.path.join(path, f)
-            __, f_ext = os.path.splitext(f)
+            _, f_ext = os.path.splitext(f)
             if not os.path.isfile(f):
                 return False
             elif f_ext != ext:
@@ -88,15 +89,15 @@ class BookHandler:
 
     def write(self, book, key, value):
         """Basic implementation of writing new values to config."""
-        if key == 'args':
+        if key is 'args':
             i = 1
             for arg in value:
                 self.parser[book]['arg' + str(i)] = arg
                 i = i + 1
-        elif len(value) == 1:
-            self.parser[book][key] = value[0]
+        elif key is 'default':
+            self.parser['default']['book'] = book
         else:
-            raise ValueError('too many args: ' + str(len(value)))
+            self.parser[book][key] = value
         self.parser.write(open(self.file, 'w'))
 
     def new_book(self, name, path, extension):

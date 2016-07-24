@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 { 
-    notebook=$( dxdt-get | rofi -dmenu -p 'Notebooks:' -no-custom ) 
+    notebook=$( dxdt get | rofi -dmenu -p 'Notebooks:' -no-custom ) 
 } && { 
-    page=$( dxdt-get --book $notebook | rofi -dmenu -p 'Page:' ) 
+    page=$( dxdt get $notebook | rofi -dmenu -p 'Page:' ) 
 } && {
-    dxdt $notebook "$page"
+    dxdt open $notebook "$page"
 }

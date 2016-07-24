@@ -2,8 +2,7 @@
 
 """dxdt.py is notational velocity for every file.
 
-The script should currently support any filetype or editor,
-as well as templates and a basic CLI.
+This module implements the core method for opening / creating files.
 """
 
 import os

@@ -1,80 +1,158 @@
-"""CLIs to dxdt."""
+#!/usr/bin/env python3
+
+"""Command line interface to dxdt.
+
+Subcommands: open, set, get, bind.
+"""
 import argparse
-# from os import path
+import argcomplete
 from dxdt import dxdt, config
 
 source = config.source()
 
 
-def opener():
-    """CLI for opening files."""
-    # Main parser
+def main():
+    """Argparse CLI to dxdt."""
+    # Top-level parser
     parser = argparse.ArgumentParser(
-        description='Notational Velocity for every file')
+        description='Notational Velocity for every file'
+    )
+    subparsers = parser.add_subparsers()
 
-    parser.add_argument('book',
-                        choices=source.get_books(),
-                        nargs='?',
-                        help='Name of dxdt notebook.')
-    parser.add_argument('page',
-                        nargs='+',
-                        help='Page to open with dxdt.')
+    # Open parser
+    parser_open = subparsers.add_parser(
+        'open',
+        usage='usage: dxdt open [-h] [BOOK] PAGE',
+        description='Open a page.'
+    )
+    parser_open.add_argument(
+        'book',
+        choices=source.get_books(),
+        default=source.default_book(),
+        nargs='?',
+        metavar='BOOK',
+        help='Name of dxdt notebook.'
+    )
 
-    args = parser.parse_args()
+    parser_open.add_argument(
+        'page',
+        metavar='PAGE',
+        nargs='+',
+        help='Page to open with dxdt.'
+    )
+    parser_open.set_defaults(func=opener)
+
+    # Set parser
+    parser_set = subparsers.add_parser(
+        'set',
+        description='Configure a dxdt notebook.'
+    )
+    parser_set.add_argument(
+        'book',
+        choices=source.get_books(),
+        default=source.default_book(),
+        nargs='?',
+        metavar='BOOK',
+        help='Name of dxdt notebook.'
+    )
+    parser_set.add_argument(
+        '-p', '--path',
+        metavar='PATH',
+        help='Path to this dxdt notebook (relative supported).'
+    )
+    parser_set.add_argument(
+        '-e', '--editor',
+        metavar='EDITOR',
+        help='Editor for dxdt pages in this notebook.'
+    )
+    parser_set.add_argument(
+        '--extension',
+        metavar='EXTENSION',
+        help='Extension for dxdt pages in this notebook.'
+    )
+    parser_set.add_argument(
+        '-t', '--template',
+        metavar='TEMPLATE',
+        help='Template for dxdt pages in this notebook.'
+    )
+    parser_set.add_argument(
+        '-a', '--arguments',
+        metavar='ARGUMENTS',
+        nargs='+',
+        help='Arguments passed to editor for this notebook.'
+    )
+    parser_set.add_argument(
+        '-d', '--default',
+        action='store_true',
+        help='Make book the default dxdt notebook.'
+    )
+    parser_set.set_defaults(func=setter)
+
+    # Get parser
+    parser_get = subparsers.add_parser(
+        'get',
+        description='Get list of books, or pages in a book.'
+    )
+    parser_get.add_argument(
+        'book',
+        nargs='?',
+        choices=source.get_books(),
+        metavar='BOOK',
+        help='Book to list pages of. Lists all books if not set.'
+    )
+    parser_get.set_defaults(func=getter)
+
+    # Bind parser
+    parser_bind = subparsers.add_parser(
+        'bind',
+        description='Bind a new book.'
+    )
+    parser_bind.add_argument(
+        'book',
+        help='Name of new dxdt book.'
+    )
+    parser_bind.add_argument(
+        'path',
+        help='Path to dxdt book.'
+    )
+    parser_bind.add_argument(
+        'extension',
+        help='Extension for pages of dxdt book.'
+    )
+    parser_bind.set_defaults(func=binder)
+
+    # Processing
+    argcomplete.autocomplete(parser)
+    cli_args = parser.parse_args()
+    cli_args.func(cli_args)
+
+
+def opener(args):
+    """Method for opening dxdt pages, calls to dxdt module."""
     args.page = ' '.join(args.page)
-
-    if args.book is not None:
-        dxdt.dxdt(args.page, args.book)
-    else:
-        dxdt.dxdt(args.page)
+    dxdt.dxdt(args.page, args.book)
 
 
-def setter():
-    """CLI for configuring dxdt notebooks."""
-    setp = argparse.ArgumentParser(
-        description='Configure an existing dxdt book.')
-    setp.add_argument('book',
-                      choices=source.get_books(),
-                      help='Name of dxdt notebook.')
-    keys = ['path', 'extension', 'editor', 'template', 'args']
-    setp.add_argument('key',
-                      choices=keys,
-                      help='Setting to configure.')
-    setp.add_argument('value',
-                      nargs='+',
-                      help='New value for setting. args key accepts ' +
-                      'multiple values, all other keys require one value.')
-
-    args = setp.parse_args()
-    source.write(args.book, args.key, args.value)
+def setter(args):
+    """Method for configuring dxdt notebooks, calls to config module."""
+    args = vars(args)
+    opts = [key for key in args.keys() if key != 'book']
+    for option in opts:
+        source.write(args.book, option, args[option])
 
 
-def binder():
-    """CLI for creating dxdt notebooks."""
-    newp = argparse.ArgumentParser(description='Bind a new dxdt notebook.')
-    newp.add_argument('name',
-                      help='Name of dxdt book.')
-    newp.add_argument('path',
-                      help='Path to dxdt book.')
-    newp.add_argument('extension',
-                      help='Extension for pages of dxdt book.')
-
-    args = newp.parse_args()
-    source.new_book(args.name, args.path, args.extension)
-
-
-def getter():
-    """CLI for getting lists of books and pages."""
-    getp = argparse.ArgumentParser(description='Get books / pages.')
-    getp.add_argument('--book',
-                      help='Book to get pagelist for. If not specified, ' +
-                      'returns list of books')
-    args = getp.parse_args()
-    if args.book is not None:
-        pages = source.get_pages(args.book)
-        for page in pages:
-            print(page)
-    else:
+def getter(args):
+    """Method for getting lists of books and pages, calls to config module."""
+    if args.book is None:
         books = source.get_books()
         for book in books:
             print(book)
+    else:
+        pages = source.get_pages(args.book)
+        for page in pages:
+            print(page)
+
+
+def binder(args):
+    """Method for creating dxdt notebooks."""
+    source.new_book(args.name, args.path, args.extension)

@@ -12,7 +12,7 @@ def read(fname):
 
 setup(
     name='dxdt',
-    version='0.42',
+    version='0.51',
     packages=find_packages(exclude=['tests']),
 
     # py_modules=[
@@ -29,7 +29,7 @@ setup(
     license='MIT',
 
     install_requires=[
-        # click
+        'argcomplete',
     ],
 
     classifiers=[
@@ -41,10 +41,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'dxdt = dxdt.cli:opener',
-            'dxdt-set = dxdt.cli:setter',
-            'dxdt-bind = dxdt.cli:binder',
-            'dxdt-get = dxdt.cli:getter'
+            'dxdt = dxdt.cli:main',
         ]
     }
 )
