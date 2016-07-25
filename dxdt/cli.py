@@ -82,11 +82,11 @@ def main():
         nargs='+',
         help='Arguments passed to editor for this notebook.'
     )
-    parser_set.add_argument(
-        '-d', '--default',
-        action='store_true',
-        help='Make book the default dxdt notebook.'
-    )
+    # parser_set.add_argument(
+    #     '-d', '--default',
+    #     action='store_true',
+    #     help='Make book the default dxdt notebook.'
+    # )
     parser_set.set_defaults(func=setter)
 
     # Get parser
@@ -109,12 +109,13 @@ def main():
         description='Bind a new book.'
     )
     parser_bind.add_argument(
-        'book',
-        help='Name of new dxdt book.'
-    )
-    parser_bind.add_argument(
         'extension',
         help='Extension for pages of dxdt book (inlcude \'.\').'
+    )
+    parser_bind.add_argument(
+        '-b', '--book',
+        default=os.path.basename(os.getcwd()),
+        help='Alternate name for new dxdt book (defaults to directory name)'
     )
     parser_bind.add_argument(
         '-p', '--path',
@@ -138,9 +139,18 @@ def opener(args):
 def setter(args):
     """Method for configuring dxdt notebooks, calls to config module."""
     args = vars(args)
-    opts = [key for key in args.keys() if key != 'book']
+
+    def is_opt(k):
+        """Check if a key is an option."""
+        if k == 'book' or k == 'func':
+            return False
+        elif args[k] is None:
+            return False
+        else:
+            return True
+    opts = [k for k in args.keys() if is_opt(k)]
     for option in opts:
-        source.write(args.book, option, args[option])
+        source.write(args['book'], option, args[option])
 
 
 def getter(args):
@@ -157,4 +167,4 @@ def getter(args):
 
 def binder(args):
     """Method for creating dxdt notebooks."""
-    source.new_book(args.name, args.path, args.extension)
+    source.new_book(args.book, args.path, args.extension)

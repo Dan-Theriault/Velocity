@@ -102,7 +102,7 @@ class BookHandler:
 
     def new_book(self, name, path, extension):
         """Create a book with given name if none exists."""
-        sections = self.getbooks()
+        sections = self.get_books()
         if name not in sections:
             self.parser.add_section(name)
             self.parser[name]['path'] = path
@@ -113,7 +113,7 @@ class BookHandler:
 
     def remove_book(self, name):
         """Remove an existing book."""
-        sections = self.getbooks()
+        sections = self.get_books()
         if name not in sections:
             raise ValueError('book does not exist: ' + name)
         else:
