@@ -5,6 +5,7 @@
 Subcommands: open, set, get, bind.
 """
 import argparse
+import os
 import argcomplete
 from dxdt import dxdt, config
 
@@ -112,12 +113,13 @@ def main():
         help='Name of new dxdt book.'
     )
     parser_bind.add_argument(
-        'path',
-        help='Path to dxdt book.'
+        'extension',
+        help='Extension for pages of dxdt book (inlcude \'.\').'
     )
     parser_bind.add_argument(
-        'extension',
-        help='Extension for pages of dxdt book.'
+        '-p', '--path',
+        default=os.getcwd(),
+        help='Specify a path, otherwise current directory is used.'
     )
     parser_bind.set_defaults(func=binder)
 
