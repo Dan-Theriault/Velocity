@@ -39,10 +39,9 @@ def dxdt(page, book=source.default_book()):
     else:
         if 'template' in book_config:
             template = source.dir + '/Templates/' + book_config['template']
-            if not os.path.exists(template) or not os.path.isfile(template):
-                template = None
-            shutil.copy(template, page)
-        else:
-            new_file = open(page, 'a')
-            new_file.close()
+            if os.path.exists(template) and os.path.isfile(template):
+                shutil.copy(template, page)
+        # else:
+        #     new_file = open(page, 'a')
+        #     new_file.close()
         subprocess.Popen([editor, *editor_args])

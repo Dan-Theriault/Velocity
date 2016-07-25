@@ -23,7 +23,7 @@ cat name ideas
 $
 $ dxdt set -e emacs --template standard-note.md # Change some settings for 'notes'
 $ dxdt bind .odf # Create a new book in the current directory
-$ dxdt bind .xcf --path ~/pics/shops --name shops # create a new book, specifying settings
+$ dxdt bind .xcf --path ~/pics/working --book shops # create a new book, specifying settings
 ```
 
 

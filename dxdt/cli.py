@@ -114,7 +114,7 @@ def main():
     )
     parser_bind.add_argument(
         '-b', '--book',
-        default=os.path.basename(os.getcwd()),
+        # default=os.path.basename(args.path), (set below)
         help='Alternate name for new dxdt book (defaults to directory name)'
     )
     parser_bind.add_argument(
@@ -167,4 +167,6 @@ def getter(args):
 
 def binder(args):
     """Method for creating dxdt notebooks."""
+    if args.book is None:
+        args.book = os.path.basename(args.path)
     source.new_book(args.book, args.path, args.extension)
