@@ -82,11 +82,11 @@ def main():
         nargs='+',
         help='Arguments passed to editor for this notebook.'
     )
-    # parser_set.add_argument(
-    #     '-d', '--default',
-    #     action='store_true',
-    #     help='Make book the default dxdt notebook.'
-    # )
+    parser_set.add_argument(
+        '-d', '--default',
+        action='store_true',
+        help='Make book the default dxdt notebook.'
+    )
     parser_set.set_defaults(func=setter)
 
     # Get parser
@@ -124,6 +124,20 @@ def main():
     )
     parser_bind.set_defaults(func=binder)
 
+    # Unbind parser
+    parser_unbind = subparsers.add_parser(
+        'unbind',
+        description='Unbind a book.'
+    )
+    parser_unbind.add_argument(
+        'book',
+        choices=source.get_books(),
+        nargs='?',
+        default=os.path.basename(os.getcwd()),
+        help='Book to be unbound. All pages are kept.'
+    )
+    parser_unbind.set_defaults(func=unbinder)
+
     # Processing
     argcomplete.autocomplete(parser)
     cli_args = parser.parse_args()
@@ -131,13 +145,13 @@ def main():
 
 
 def opener(args):
-    """Method for opening dxdt pages, calls to dxdt module."""
+    """Method for opening a dxdt page, calls to dxdt module."""
     args.page = ' '.join(args.page)
     dxdt.dxdt(args.page, args.book)
 
 
 def setter(args):
-    """Method for configuring dxdt notebooks, calls to config module."""
+    """Method for configuring dxdt books, calls to config module."""
     args = vars(args)
 
     def is_opt(k):
@@ -166,7 +180,12 @@ def getter(args):
 
 
 def binder(args):
-    """Method for creating dxdt notebooks."""
+    """Method for creating a dxdt book."""
     if args.book is None:
         args.book = os.path.basename(args.path)
     source.new_book(args.book, args.path, args.extension)
+
+
+def unbinder(args):
+    """Method for deleting a dxdt book."""
+    source.remove_book(args.book)

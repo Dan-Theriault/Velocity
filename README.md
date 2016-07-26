@@ -64,6 +64,3 @@ extension = .org
 editor = emacs
 ```
 
-## Roadmap
-* Currently the command-line interface cannot always achieve a desired configuration (setting defaults, deleting notebooks, deleting settings, etc). Achieving better coverage here is a priority
-* dx/dt currently does not have tests. It will... eventually.

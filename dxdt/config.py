@@ -42,7 +42,7 @@ class BookHandler:
 
     def get_pages(self, book):
         """return a list of existing pages in a book."""
-        path = self.parser[book]['path']
+        path = os.path.expanduser(self.parser[book]['path'])
         ext = self.parser[book]['extension']
 
         def is_page(f):
@@ -94,7 +94,7 @@ class BookHandler:
             for arg in value:
                 self.parser[book]['arg' + str(i)] = arg
                 i = i + 1
-        elif key is 'default':
+        elif key is 'default' and value is True:
             self.parser['default']['book'] = book
         else:
             self.parser[book][key] = value
