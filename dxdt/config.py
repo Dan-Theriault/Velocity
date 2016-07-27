@@ -94,8 +94,9 @@ class BookHandler:
             for arg in value:
                 self.parser[book]['arg' + str(i)] = arg
                 i = i + 1
-        elif key is 'default' and value is True:
-            self.parser['default']['book'] = book
+        elif key is 'default':
+            if value is True:
+                self.parser['default']['book'] = book
         else:
             self.parser[book][key] = value
         self.parser.write(open(self.file, 'w'))

@@ -51,7 +51,7 @@ def main():
     parser_set.add_argument(
         'book',
         choices=source.get_books(),
-        default=source.default_book(),
+        default=os.path.basename(os.getcwd()),
         nargs='?',
         metavar='BOOK',
         help='Name of dxdt notebook.'
