@@ -1,3 +1,4 @@
+![](media/dxdt.gif)
 # dx/dt
 
 **dx/dt is a simple python3 utility for opening and creating files**. It is inspired by Notational Velocity's simple, flat model of opening a page if it exists and creating one if it doesn't. dx/dt stays closer to the Unix philosophy-- it's simple and composable. It is a flexible tool, allowing for multiple notebooks, any kind of file, any editing program, and user templates. Most functionality is surfaced through a command line interface. Configuration is stored in plain text.
@@ -63,4 +64,3 @@ path = ~/org
 extension = .org
 editor = emacs
 ```
-
