@@ -8,6 +8,7 @@ import argparse
 import os
 import argcomplete
 from dxdt import dxdt, config
+from dxdt.errors import ConfigError
 
 source = config.source()
 
@@ -18,6 +19,11 @@ def main():
     parser = argparse.ArgumentParser(
         description='Notational Velocity for every file'
     )
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+    )
+
     subparsers = parser.add_subparsers()
 
     # Open parser
@@ -141,7 +147,13 @@ def main():
     # Processing
     argcomplete.autocomplete(parser)
     cli_args = parser.parse_args()
-    cli_args.func(cli_args)
+    try:
+        cli_args.func(cli_args)
+    except (ConfigError, ValueError) as e:
+        if cli_args.debug:
+            raise e
+        else:
+            print(e)
 
 
 def opener(args):

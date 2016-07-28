@@ -8,12 +8,24 @@ Feature-incomplete and under active development.
 
 import configparser
 import os
+from dxdt.errors import ConfigError
 
 
 def source():
     """return configuration file path."""
-    configdir = os.path.expanduser('~/.dxdt')
-    config_source = BookHandler(configdir+'/config')
+    config_dir = os.path.expanduser('~/.dxdt')
+
+    if not os.path.exists(config_dir) and os.path.isdir(config_dir):
+        os.makedirs(config_dir)
+    config_file = config_dir+'/config'
+    if not os.path.exists(config_file) and os.path.isfile(config_file):
+        init = configparser.ConfigParser()
+        init.add_section('default')
+        init['default']['editor'] = 'xdg-open'
+        init['default']['book'] = ''
+        raise ConfigError("No dxdt books found.")
+
+    config_source = BookHandler(config_file)
     return config_source
 
 
@@ -32,18 +44,26 @@ class BookHandler:
 
     def default_book(self):
         """Used primarily when 'book' argument to dxdt() is None."""
-        return self.parser['default']['book']
+        try:
+            return self.parser['default']['book']
+        except KeyError:
+            return None
 
     def get_books(self):
         """return a list of books based off the configfile."""
         sections = self.parser.sections()
         sections.remove('default')
+        # if sections == []:
+        #     raise ConfigError("No dxdt books found.")
         return sections
 
     def get_pages(self, book):
         """return a list of existing pages in a book."""
-        path = os.path.expanduser(self.parser[book]['path'])
-        ext = self.parser[book]['extension']
+        try:
+            path = os.path.expanduser(self.parser[book]['path'])
+            ext = self.parser[book]['extension']
+        except KeyError:
+            raise ConfigError("book \'"+book+"\' is improperly configured.")
 
         def is_page(f):
             """Determine if a path points to a page in given notebook."""
@@ -65,11 +85,14 @@ class BookHandler:
 
     def read(self, book):
         """Read configuration information and return as a dict."""
-        config = {
-            'path': os.path.expanduser(self.parser[book]['path']),
-            'extension': self.parser[book]['extension'],
-            'args': []
-        }
+        try:
+            config = {
+                'path': os.path.expanduser(self.parser[book]['path']),
+                'extension': self.parser[book]['extension'],
+                'args': []
+            }
+        except KeyError:
+            raise ConfigError("book \'"+book+"\' is improperly configured.")
 
         # Get editor for book if available: else, use global default
         if 'editor' in self.parser[book]:
