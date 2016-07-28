@@ -12,7 +12,9 @@ Usage examples use the example configuration below. Use dxdt [subcommand] -h for
 ```sh
 $ dxdt open todo # Open a page at '~/Notes/todo.md' in a new gnome-terminal window, using vim, in the default book - 'notes'
 $ dxdt open org jul06 # Open a page at '~/org/jul06.org' in emacs, in the book 'org'
-$
+```
+
+```sh
 $ dxdt get # get a list of all dx/dt books
 notes
 psych
@@ -21,9 +23,16 @@ $ dxdt get notes # get a list of all pages in book 'notes'
 todo
 groceries
 cat name ideas
-$
+```
+
+```sh
 $ dxdt set -e emacs --template standard-note.md # Change some settings for 'notes'
-$ dxdt bind .odf # Create a new book in the current directory
+$ dxdt set psyc -p ~/Documents/PSYC-200
+```
+
+```sh
+$ dxdt bind .odf # Create a new book (name and path from current directory)
+$ dxdt unbind # Unbind book in the current directory
 $ dxdt bind .xcf --path ~/pics/working --book shops # create a new book, specifying settings
 ```
 
